@@ -22,10 +22,12 @@ class AuthentificationController extends AbstractController
     {
         /* formulaire d'inscription */
         $inscriptionForm = $this->createFormBuilder()
-        ->add('login', TextType::class)
-        ->add('email', EmailType::class)
-        ->add('pass', PasswordType::class)
-        ->getForm();
+            ->add('login', TextType::class)
+            ->add('email', EmailType::class)
+            ->add('pass', PasswordType::class)
+            ->setAction($this->generateUrl("addAccount"))
+            ->setMethod("POST")
+            ->getForm();
 
 
         /* affichage de la vue */
@@ -48,24 +50,42 @@ class AuthentificationController extends AbstractController
         }
 
         // on récupère les données en POST
-        $posted_datas = ($_POST["account_creation"]) ? $_POST["account_creation"] : null;
+        $posted_datas = ($_POST["form"]) ? $_POST["form"] : null;
         if(! isset($posted_datas)){
             return $this->json(["message" => "Aucune donnée n'a été trouvée ou elles sont incomplètes", "status" => 500], 500);
         }
 
-        //décodage des données
-        $posted_datas = json_decode($posted_datas);
-
         //création du user
         $accountManager = $this->getDoctrine()->getManager();
 
-        $account = new User();
-        $account->setLogin($posted_datas["login"]);
-        $account->setEmail($posted_datas["email"]);
-        $account->setPass(password_hash($posted_datas["pass"], PASSWORD_DEFAULT));
+        $email = $posted_datas["email"];
+        $login = $posted_datas["login"];
 
-        $accountManager->persist();
+        //vérification de l'unicité de l'email
+        $repository = $this->getDoctrine()->getRepository(User::class);
+        $tmp = $repository->findOneBy(["email" => $email]);
+        if(isset($tmp)){
+            return $this->json(["message" => "Un compte existe déjà avec cet email !", "status" => 403], 403);
+        }
+        unset($tmp);
+        unset($repository);
+
+        // hash du password
+        $pass = $posted_datas["pass"];
+        $pass = password_hash($pass, PASSWORD_DEFAULT);
+
+        $account = new User();
+        $account->setLogin($login);
+        $account->setEmail($email);
+        $account->setPass($pass);
+
+        unset($login);
+        unset($email);
+        unset($pass);
+
+        $accountManager->persist($account);
         $accountManager->flush();
+        unset($accountManager);
 
         //retour de la fonction
         return $this->json([
@@ -73,7 +93,7 @@ class AuthentificationController extends AbstractController
             "status" => "200",
             "user" => [
                 "id" => $account->getId(),
-                "email" => $account->setEmail(),
+                "email" => $account->getEmail(),
                 "login" => $account->getLogin()
             ]
         ], 200);
