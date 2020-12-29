@@ -1,0 +1,90 @@
+{% extends "base.html.twig" %}
+
+{# head #}
+{% block title %}
+    MyOnlinePhoneBook - Home
+{% endblock %}
+
+{% block meta_description %}
+    Répertoire en ligne qui permet de garder le contact avec votre famille, amis, ...
+{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{{ asset('asset/style/css/HomePage.min.css') }}">
+{% endblock %}
+
+{# body #}
+{% block body %}
+    <h1>My Online Phone Book</h1>
+    <div id="authentificationDiv">
+        {# tabs #}
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#connexion" id="connexion_toogle">CONNEXION</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" aria-current="inscription" href="#inscription" id="inscription_toogle">INSCRIPTION</a>
+            </li>
+        </ul>
+
+        {# table content #}
+        <div class="table-content">
+
+            {# inscription #}
+            <div id="inscription">
+                {{ form_start(inscriptionForm) }}
+
+                    <div class="row">
+                        <div class="col-sm-12 form-floating">
+                            {{ form_widget(inscriptionForm.login, {"attr": {
+                                    "class" : "form-control",
+                                    "placeholder" : "Entrez votre login"
+                                }})
+                            }}
+                            {{
+                                form_label(inscriptionForm.login)
+                            }}
+                        </div>
+                        <div class="col-sm-12 form-floating">
+                            {{ form_widget(inscriptionForm.email, {"attr": {
+                                "class" : "form-control",
+                                "placeholder" : "Entrez votre email"
+                            }})
+                            }}
+                            {{
+                            form_label(inscriptionForm.email)
+                            }}
+                        </div>
+                        <div class="col-sm-12 form-floating">
+                            {{ form_widget(inscriptionForm.pass, {"attr": {
+                                "class" : "form-control",
+                                "placeholder" : "Entrez votre mot de passe"
+                            }})
+                            }}
+                            {{
+                            form_label(inscriptionForm.pass)
+                            }}
+                        </div>
+                    </div>
+
+                <button type="submit" class="btn btn-danger">INSCRIPTION</button>
+
+                {{ form_end(inscriptionForm) }}
+            </div>
+
+            {# connexion #}
+            <div id="connexion">
+                <form action="">
+                    <input type="text"><input type="text"><input type="text">
+                    <input type="text"><input type="text"><input type="text">
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ asset('asset/script/HomePage.js') }}"></script>
+{% endblock %}

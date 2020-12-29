@@ -1,0 +1,75 @@
+@import "mixins";
+@import "variables";
+@import "common";
+
+body{
+  @include flex_column_top_center;
+  background-image: url("../../image/address_book.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+h1{
+  font-family: 'Mini Story Bold';
+  color: white;
+  font-size: 38px !important;
+  margin-top: 45px !important;
+  margin-bottom: 45px !important;
+}
+
+div#authentificationDiv{
+  @include flex_column_top_center;
+  background: #474747;
+  opacity: 0.7;
+  min-width: 80%;
+  max-width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+
+  ul{
+    margin-bottom: 20px;
+
+    a:not(.active){
+      color: white !important;
+    }
+  }
+
+}
+
+/* formulaires */
+form{
+  input{
+    margin-bottom: 15px;
+  }
+
+  button[type="submit"]{
+    float: right;
+  }
+}
+
+.form-floating{
+  label{
+    left: 20px !important;
+  }
+}
+
+
+/* ---------------------------------------------------------------------------------------------------------------------
+                                      Computer
+---------------------------------------------------------------------------------------------------------------------- */
+@media screen and (min-width: 1300px){
+  html, body{
+    @include flex_center;
+  }
+
+  div#authentificationDiv{
+    min-width: 50%;
+    max-width: 50%;
+    min-height: 50%;
+
+  }
+
+
+}
